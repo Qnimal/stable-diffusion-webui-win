@@ -1,5 +1,14 @@
 @echo off
 
+
+IF NOT DEFINED HTTP_PROXY (
+    echo "代理未配置，如果需要请设置"
+    echo "can't find proxy environment variable, set it if u need it"
+) ELSE (
+    echo "代理已配置，继续执行"
+    echo "proxy environment variable found, continue to run"
+)
+
 if exist webui.settings.bat (
     call webui.settings.bat
 )

@@ -316,6 +316,22 @@ def requirements_met(requirements_file):
 
 
 def prepare_environment():
+    http_proxy = os.environ.get('HTTP_PROXY', None)
+    https_proxy = os.environ.get('HTTPS_PROXY', None)
+    print(f'http_proxy environment variable: {http_proxy}')
+    print(f'https_proxy environment variable: {https_proxy}')
+    # 如果设置了代理，则配置git使用代理
+    # if setting up proxy, configure git to use it
+    if http_proxy is not None and https_proxy is not None:
+        print('检查到代理环境变量，据此配置git config')
+        print(f"Configuring git HTTP proxy: {http_proxy}")
+        print(f"Configuring git HTTPS proxy: {https_proxy}")
+        run(f'git config http.proxy {http_proxy}', "Configuring git HTTP proxy")
+        run(f'git config https.proxy {https_proxy}', "Configuring git HTTPS proxy")
+    else:
+        print("因没检测到代理环境变量而不对后续命令行工具做代理配置，如果需要请在前置文件中设置")
+        print("No HTTP proxy configured for git and requests. if u need it, please set it in the environment variable HTTP_PROXY or HTTPS_PROXY")
+
     torch_index_url = os.environ.get('TORCH_INDEX_URL', "https://download.pytorch.org/whl/cu121")
     torch_command = os.environ.get('TORCH_COMMAND', f"pip install torch==2.1.2 torchvision==0.16.2 --extra-index-url {torch_index_url}")
     if args.use_ipex:
@@ -413,6 +429,13 @@ def prepare_environment():
     git_clone(stable_diffusion_xl_repo, repo_dir('generative-models'), "Stable Diffusion XL", stable_diffusion_xl_commit_hash)
     git_clone(k_diffusion_repo, repo_dir('k-diffusion'), "K-diffusion", k_diffusion_commit_hash)
     git_clone(blip_repo, repo_dir('BLIP'), "BLIP", blip_commit_hash)
+    print('克隆完成')
+    print('clonening complete')
+    if (os.environ.get('HTTP_PROXY', None) is not None) or (os.environ.get('HTTPS_PROXY', None) is not None):
+        print('清理临时设置的git config 代理配置')
+        print("Cleaning up git proxy settings")
+        run(f'git config --unset http.proxy', "Cleaning up git HTTP proxy")
+        run(f'git config --unset https.proxy', "Cleaning up git HTTPS proxy")
 
     startup_timer.record("clone repositores")
 
