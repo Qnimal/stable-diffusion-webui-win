@@ -5,7 +5,7 @@ README
 
 
 ### 简介
-此项目基于[stable-diffusion-webui]([https://baidu.com](https://github.com/AUTOMATIC1111/stable-diffusion-webui)) fork
+此项目基于[stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) fork
 添加了对于windows中使用git bash shell和代理的支持，为windows用户提供更好的支持
 ### 部分原理
 1、windows环境的python在创建虚拟环境时，表现和linux略有不同，前者会将执行文件等放入Scripts而非bin，所以虽然shell支持执行，但是却不会成功<br>
